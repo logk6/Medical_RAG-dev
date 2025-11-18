@@ -1,0 +1,15 @@
+pymupdf
+tqdm
+spacy
+torch
+sentence-transformers
+elasticsearch
+faiss-cpu
+numpy
+pandas
+flask
+streamlit
+requests
+python-dotenv
+openai
+google-generativeai
