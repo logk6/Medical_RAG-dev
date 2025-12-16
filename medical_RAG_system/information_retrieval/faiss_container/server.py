@@ -12,21 +12,20 @@ index = faiss.read_index(index_path)
 csv_path = "../../data/faiss_indices/faiss_csv.csv"
 csv_df = pd.read_csv(csv_path)
 
-# Create a dictionary to map index numbers to PMIDs
-index_to_ids = dict(zip(csv_df['Index'], csv_df['ID']))
+# Tạo 1 từ điển map giữa số index và ids trong target/text_chunked.jsonl
+index_to_ids = dict(zip(csv_df['Index'], csv_df['ID'])) # {index_1: id_1, index_2: id_2}
 
 @app.route('/search', methods=['POST'])
 def search():
-    # Extract the query vectors and the value of k from the POST request
+    # Lấy dữ liệu (data) từ chỗ gọi api search
     data = request.get_json()
     queries = np.array(data['queries'], dtype='float32')
-    
-    # Get the number of nearest neighbors to search for
     k = int(data['k'])
-    # Perform the search in the Faiss index
+
+    # Tìm kiếm trong Faiss index
     distances, indices = index.search(queries, k)
     
-    # Map the Faiss indices to PMIDs using the dictionary
+    # Lấy ra các id ứng với các index đã tìm được
     matched_IDs = [[index_to_ids[idx] for idx in row] for row in indices]
 
     # Return the response as JSON

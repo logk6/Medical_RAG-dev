@@ -31,7 +31,9 @@ class bioBERTEncoder:
 
     # Source file là file pdf đã được chunking và chuyển thành jsonl
     # Target là file jsonl giống source nhưng thêm embedding, thay cho cột text_chunked
-    def embed_file(self, target_file, source_file):
+    def embed_file(self):
+        source_file = Path('../../data/embed_data/source/text_chunked.jsonl')
+        target_file = Path('../../data/embed_data/target/text_chunked.jsonl')
         with open(target_file, 'w', encoding='utf-8') as target:
             with open(source_file, 'r', encoding='utf-8') as source:
                 for line in source:
@@ -48,9 +50,6 @@ class bioBERTEncoder:
 
 if __name__ == "__main__":
     # Đây là phần test hàm
-    source_file = Path('../../data/embed_data/source/text_chunked.jsonl')
-    target_file = Path('../../data/embed_data/target/text_chunked.jsonl')
-
     encoder = bioBERTEncoder()
-    encoder.embed_file(target_file, source_file)
+    encoder.embed_file()
 
