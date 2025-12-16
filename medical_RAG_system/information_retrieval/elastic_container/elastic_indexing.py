@@ -9,10 +9,12 @@ from elasticsearch import Elasticsearch, helpers
 class ElasticIndexing:
     def __init__(self, index_name):
         self.password = "7n2xK2kELC0GYsOCyi9+" # Mật khẩu elasticsearch trong máy bạn
+        ca_certs = r"C:\Users\Dung\Downloads\elasticsearch-9.2.0-windows-x86_64\elasticsearch-9.2.0\config\certs\http_ca.crt"
         self.es = Elasticsearch(
             ['https://localhost:9200'],
             basic_auth=('elastic', self.password),
-            verify_certs=False,
+            verify_certs=True,
+            ca_certs=ca_certs,
             request_timeout=60
         )
         self.index_name = index_name
@@ -109,6 +111,6 @@ class ElasticIndexing:
 
 if __name__ == "__main__":
     # ca_certs=r"C:\Users\Dung\Downloads\elasticsearch-9.2.0-windows-x86_64\elasticsearch-9.2.0\config\certs\http_ca.crt"
-    index_name = "test_index"
+    index_name = "injury_prevent_index"
     elastic_indexing = ElasticIndexing(index_name)
     elastic_indexing.indexing_documents()

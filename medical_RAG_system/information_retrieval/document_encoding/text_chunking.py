@@ -27,7 +27,20 @@ class TextChunking:
                                     "text": text})
         return pages_and_texts
 
+    def get_next_id(self):
+        counter_file = Path("../../data/id_counter.txt")
+        if counter_file.exists():
+            next_id = int(counter_file.read_text())
+        else:
+            next_id = 1
+        return next_id
+
+    def set_next_id(self, next_id):
+        counter_file = Path("../../data/id_counter.txt")
+        counter_file.write_text(str(next_id))
+
     def pdf_chungking(self, pdf_paths: list):
+        next_id = self.get_next_id()
         for idx, pdf_path in enumerate(tqdm(pdf_paths)):
             if not isinstance(pdf_path, str):
                 raise TypeError("pdf_path must be a string")
@@ -80,16 +93,21 @@ class TextChunking:
             file_stem = Path(pdf_path).stem
             for c_idx, item in enumerate(pages_and_chunks):
                 data_chunked = {
-                    "id": "doc_" + str(idx) + "_chunk_" + str(c_idx),
+                    "id": str(next_id),
                     "title": str(file_stem),
                     "text_chunked": item["sentence_chunk"],
                 }
                 source_text_chunked = Path('../../data/embed_data/source/text_chunked.jsonl')
                 with open(source_text_chunked, "a", encoding="utf-8") as f:
                     f.write(json.dumps(data_chunked, ensure_ascii=False) + "\n")
+                next_id += 1
+
+        self.set_next_id(next_id)
 
 if __name__ == "__main__":
     # Đây là phần test hàm
-    pdf_paths = ["D:\DUNG\MasterProgram\Project_I\Medical_RAG\medical_RAG_system\data\pdf_document\Multi_teacher_KD.pdf"]
+    pdf_paths = ["D:\DUNG\MasterProgram\Project_I\Medical_RAG_Project\medical_RAG_system\data\pdf_document\Sport_injury_prevent_2009.pdf",
+                 "D:\DUNG\MasterProgram\Project_I\Medical_RAG_Project\medical_RAG_system\data\pdf_document\Sports_Rehabilitation_and_Injury_Prevention.pdf",
+                 ]
     text_chunking = TextChunking()
     text_chunking.pdf_chungking(pdf_paths=pdf_paths)

@@ -3,10 +3,11 @@ import google.generativeai as genai
 import os
 import json
 from typing import List, Dict
+from dotenv import dotenv_values
 
 class Chat:
-    def __init__(self, question_type: int = 1, api_key: str = "AIzaSyCKSvOPlCW_P2BY2UlJlGYtX6KBxxSacu0", model=genai.GenerativeModel("models/gemini-2.5-flash")):
-        self.api_key = api_key
+    def __init__(self, question_type: int = 1, model=genai.GenerativeModel("models/gemini-2.5-flash")):
+        self.api_key = dotenv_values("medical_RAG_system/pass.env")["HF_KEY"]
         genai.configure(api_key=self.api_key)
         self.model = model
         self.context = self.set_context(question_type)
